@@ -1,0 +1,49 @@
+<lnstrecipe>
+    <define>
+        <alias name="net" value="1.1.1"/>
+    </define>
+    <network>
+        <host id="guest1">
+            <params>
+                <param name="machine_type" value="guest"/>
+            </params>
+            <interfaces>
+                <eth id="if1" label="A">
+                    <addresses>
+                        <address>{$net}.10/24</address>
+                    </addresses>
+                </eth>
+            </interfaces>
+        </host>
+        <host id="guest2">
+            <params>
+                <param name="machine_type" value="guest"/>
+            </params>
+            <interfaces>
+                <eth id="if1" label="B">
+                    <addresses>
+                        <address>{$net}.11/24</address>
+                    </addresses>
+                </eth>
+            </interfaces>
+        </host>
+        <host id="host1">
+            <params>
+                <param name="ovs_support" value="true"/>
+                <param name="order" value="1"/>
+            </params>
+            <interfaces>
+                <eth id="tap1" label="A"/>
+                <eth id="tap2" label="B"/>
+                <ovs_bridge id="ovs1">
+                    <slaves>
+                        <slave id="tap1"/>
+                        <slave id="tap2"/>
+                    </slaves>
+                </ovs_bridge>
+            </interfaces>
+        </host>
+    </network>
+
+    <task python="05-sctp_flower.py" />
+</lnstrecipe>
