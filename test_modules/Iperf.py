@@ -17,6 +17,11 @@ from lnst.Common.Utils import is_installed
 
 class Iperf(TestGeneric):
     def _compose_iperf_cmd(self, role):
+        if self.get_opt("iperf3"):
+            iperf_bin = "iperf3"
+        else:
+            iperf_bin = "iperf"
+
         iperf_options = self.get_opt("iperf_opts")
         if iperf_options is None:
             iperf_options = ""
@@ -24,13 +29,13 @@ class Iperf(TestGeneric):
         cmd = ""
         if role == "client":
             iperf_server = self.get_mopt("iperf_server", opt_type="addr")
-            cmd = "iperf --%s %s -t %s %s" % (role, iperf_server, self.duration, iperf_options)
+            cmd = "%s --%s %s -t %s %s" % (iperf_bin, role, iperf_server, self.duration, iperf_options)
         elif role == "server":
             bind = self.get_opt("bind", opt_type="addr")
             if bind != None:
-                cmd = "iperf --%s -B %s %s" % (role, bind, iperf_options)
+                cmd = "%s --%s -B %s %s" % (iperf_bin, role, bind, iperf_options)
             else:
-                cmd = "iperf --%s %s" % (role, iperf_options)
+                cmd = "%s --%s %s" % (iperf_bin, role, iperf_options)
 
         return cmd
 
@@ -90,6 +95,12 @@ class Iperf(TestGeneric):
         if re.search("connect failed:", output):
             logging.info("Iperf connection failed!")
             return (False, "Iperf connection failed!")
+
+        m = re.search("iperf3: error - (.*)", output)
+        if m:
+            err = m.groups()[0]
+            logging.info("Iperf error: %s" % err)
+            return (False, "Iperf error: %s" % err)
 
         m = re.search("\[[^0-9]*[0-9]*\]\s*0.0+-\s*\d*\.\d+\s*sec\s*\d*(\.\d*){0,1}\s*[ kGMT]Bytes\s*(\d*(\.\d*){0,1}\s*[ kGMT]bits\/sec)", output, re.IGNORECASE)
         if m is None:
