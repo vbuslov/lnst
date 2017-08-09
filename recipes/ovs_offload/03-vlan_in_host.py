@@ -26,7 +26,7 @@ h2_mac = h2_vlan10.get_hwaddr()
 g1_guestnic = g1.get_interface("guestnic")
 g1_mac = g1_guestnic.get_hwaddr()
 
-ping_count = 100
+ping_count = 30
 ping_interval = 0.2
 
 ping_mod = ctl.get_module("IcmpPing",

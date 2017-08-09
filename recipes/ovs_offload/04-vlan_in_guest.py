@@ -19,7 +19,7 @@ ipv = ctl.get_alias("ipv")
 h2_vlan10 = h2.get_interface("vlan10")
 g1_vlan10 = g1.get_interface("vlan10")
 
-ping_count = 100
+ping_count = 30
 ping_interval = 0.2
 
 ping_mod = ctl.get_module("IcmpPing",
