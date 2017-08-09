@@ -61,25 +61,29 @@ class Testlib:
                 return None
         return None
 
-    def _get_iperf_srv_mod(self):
+    def _get_iperf_srv_mod(self, iperf3=False):
         modules_options = {
             "role": "server",
         }
+        if iperf3:
+            return self._ctl.get_module("Iperf3", options=modules_options)
         return self._ctl.get_module("Iperf", options=modules_options)
 
-    def _get_iperf_cli_mod(self, server, duration):
+    def _get_iperf_cli_mod(self, server, duration, iperf3=False, iperf_opts=''):
         modules_options = {
             "role": "client",
             "iperf_server": server,
             "duration": duration,
-            "iperf_opts": "-l 1024k -w 512k -P 12"
+            "iperf_opts": iperf_opts
         }
+        if iperf3:
+            return self._ctl.get_module("Iperf3", options=modules_options)
         return self._ctl.get_module("Iperf", options=modules_options)
 
-    def iperf(self, cli_if, srv_if, duration, desc):
+    def iperf(self, cli_if, srv_if, duration, desc, iperf3=False, iperf_opts='-l 1024k -P 12'):
         srv_ip = srv_if.get_ip(0)
-        srv_m = self._get_iperf_srv_mod()
-        cli_m = self._get_iperf_cli_mod(srv_ip, duration)
+        srv_m = self._get_iperf_srv_mod(iperf3)
+        cli_m = self._get_iperf_cli_mod(srv_ip, duration, iperf3, iperf_opts)
 
         cli_host = cli_if.get_host()
         srv_host = srv_if.get_host()

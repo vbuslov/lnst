@@ -11,8 +11,8 @@ h1 = ctl.get_host("host1")
 g1 = ctl.get_host("guest1")
 g2 = ctl.get_host("guest2")
 
-g1.sync_resources(modules=["IcmpPing", "Icmp6Ping", "Iperf"])
-g2.sync_resources(modules=["Iperf"])
+g1.sync_resources(modules=["IcmpPing", "Icmp6Ping", "Iperf", "Iperf3"])
+g2.sync_resources(modules=["Iperf", "Iperf3"])
 
 # ------
 # TESTS
@@ -82,3 +82,4 @@ if ipv in ('ipv6', 'both'):
 
 if do_iperf:
     tl.iperf(g1_guestnic, g2_guestnic, 30, 'vm1->vm2')
+    tl.iperf(g1_guestnic, g2_guestnic, 30, 'vm1->vm2 SCTP', iperf3=True, iperf_opts='--sctp')
