@@ -610,6 +610,12 @@ class InterfaceAPI(object):
     def link_stats(self):
         return self._if.link_stats()
 
+    def up(self):
+        return self._if.up()
+
+    def down(self):
+        return self._if.down()
+
     def set_link_up(self):
         return self._if.set_link_up()
 
